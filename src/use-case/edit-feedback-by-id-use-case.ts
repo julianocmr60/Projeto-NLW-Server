@@ -1,20 +1,21 @@
 import { MailAdapter } from "../adapters/mail-adapter";
 import { FeedbacksRepository } from "../repositories/feedbacks-repository";
 
-interface SubmitFeedbackUseCaseRequest{
+interface EditfeedbackUseCaseRequest{
+    id: string;
     type: string;
     comment: string;
     screenshot?: string;
 }
 
-export class SubmitFeedbackUseCase{
+export class EditFeedbackUseCase{
     constructor(
         private feedbacksRepository: FeedbacksRepository,
         private mailAdapter: MailAdapter,
     ){}
 
-    async execute(request : SubmitFeedbackUseCaseRequest){
-        const { type, comment, screenshot } = request;
+    async execute(request : EditfeedbackUseCaseRequest){
+        const {id, type, comment, screenshot } = request;
 
         if (!type){
             throw new Error("Type is required.")
@@ -27,7 +28,8 @@ export class SubmitFeedbackUseCase{
             throw new Error("Invalid screenshot format.")
         }
 
-        await this.feedbacksRepository.create({
+        await this.feedbacksRepository.edit({
+            id,
             type,
             comment,
             screenshot,
